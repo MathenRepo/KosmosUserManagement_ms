@@ -12,7 +12,10 @@
 
 	<H1>Home Page</H1>
 	<H2>View Profile</H2>
-	<form action="viewProfile">
+	<form action="viewProfileMS">
+	<sec:authorize access="${user.userRole == 'SUPERUSER'}">
+	Enter UserID : <input type="text" name="viewUser" ><br>
+	</sec:authorize>
 	<input type="Submit" ><br>
 	<H3>User Details Below:</H3> 
 	User Name : ${user.userName}<br>

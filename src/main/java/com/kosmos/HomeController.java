@@ -16,12 +16,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kosmos.app.AppConstants;
 import com.kosmos.dao.UserE;
 import com.kosmos.dao.UserRepo;
 import com.kosmos.service.UserDetailsImpl;
+
+import antlr.StringUtils;
 
 
 @Controller
@@ -89,6 +93,32 @@ public class HomeController {
 			return mv;
 		}
 	}
+	
+	
+	@RequestMapping(value = "/viewProfileMS")
+	public ModelAndView viewProfileMS(String viewUser) {
+		try {
+			logger.info("Into Home Controller , /viewProfile MS page");
+			
+			RestTemplate ms = KosmosUserManagementMsApplication.getInvokeTemplate();
+			if(viewUser == null || viewUser == "")
+			{
+				viewUser = getCurrentUser().getUserName();
+			}
+			UserE userObj = ms.getForObject("http://localhost:8090/service/viewProfile/" + viewUser, UserE.class);
+			ModelAndView mv = new ModelAndView();
+			mv.addObject("user", userObj);
+			mv.setViewName("home");
+			return mv;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.error("Error in app home page " + ex.getMessage());
+			ModelAndView mv = new ModelAndView();
+			mv.setViewName("error");
+			return null;
+		}
+	}
+	
 	
 	@RequestMapping(value = "/createUser")
 	public ModelAndView createUser(UserE newuser) {
