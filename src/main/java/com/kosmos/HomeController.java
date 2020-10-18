@@ -46,8 +46,6 @@ public class HomeController {
 	private String getAuthTokenFromString(String token)
 	{
 		try {
-	      Signature sign = Signature.getInstance(AppConstants.AUTH_SIGN);
-	      
 	      KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(AppConstants.AUTH_ALG_RSA);
 	      
 	      keyPairGen.initialize(AppConstants.AUTH_CDE);
@@ -98,6 +96,7 @@ public class HomeController {
 	@RequestMapping(value = "/viewProfileMS")
 	public ModelAndView viewProfileMS(String viewUser) {
 		try {
+			
 			logger.info("Into Home Controller , /viewProfile MS page");
 			
 			RestTemplate ms = KosmosUserManagementMsApplication.getInvokeTemplate();
